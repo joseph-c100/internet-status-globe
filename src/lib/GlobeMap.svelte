@@ -1,6 +1,9 @@
 <script>
     import Globe from 'globe.gl';
     import { onMount } from 'svelte';
+    import {last7days} from './index.js'
+
+    $: console.log($last7days)
   
     let globeContainer;
     let myGlobe;
@@ -8,10 +11,11 @@
     onMount(() => {
       myGlobe = Globe()(globeContainer)
         .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
-        .backgroundColor('#fff')
+        .backgroundColor('#000')
         .width(window.innerWidth)
         .height(window.innerHeight)
-        .pointOfView({ lat: 0, lng: 0, altitude: 2 });
+        .pointOfView({ lat: 0, lng: 0, altitude: 1.2 })
+        .showAtmosphere(false);
   
       // getch boundary geojson data
       fetch('/ne_110m_admin_0_countries.geojson')
@@ -21,8 +25,9 @@
             .hexPolygonsData(countries.features)
             .hexPolygonResolution(3)
             .hexPolygonMargin(0.3)
-            .hexPolygonUseDots(true)
-            .hexPolygonColor(() => `#${(Math.random() * 0xffffff | 0).toString(16).padStart(6, '0')}`);
+            .hexPolygonUseDots(false)
+            .hexPolygonColor(()=>'#fff')
+            .hexPolygonAltitude(0.02)
         });
   
       // Handle window resizing

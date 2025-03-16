@@ -17,6 +17,7 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"d3-fetch": "^3.0.1",
 		"globe.gl": "^2.41.1"
 	}
 }
