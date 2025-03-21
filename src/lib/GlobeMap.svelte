@@ -1,13 +1,11 @@
 <script>
   import Globe from "globe.gl";
   import { onMount } from "svelte";
-  import { last7days, last30days } from "./index.js";
 
   let globeContainer;
   let myGlobe;
 
-  let data7days = $last7days?.result?.annotations;
-  let data3months = $last30days?.result?.annotations;
+  export let data7days, data3months;
 
   onMount(() => {
     myGlobe = Globe()(globeContainer)
@@ -31,7 +29,7 @@
             const countryName = feature.properties.NAME;
             const outageLocations =
               data7days?.map((day) => day.locationsDetails[0].name) || [];
-            const hasOutage = outageLocations.includes(countryName);
+            const hasOutage = outageLocations?.includes(countryName);
             return hasOutage ? "red" : "#fff";
           })
           .hexPolygonAltitude(0.02);
