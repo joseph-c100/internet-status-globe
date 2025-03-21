@@ -1,12 +1,13 @@
 <script>
   import Globe from "globe.gl";
   import { onMount } from "svelte";
-  import { last7days } from "./index.js";
-
-  $: console.log($last7days);
+  import { last7days, last30days } from "./index.js";
 
   let globeContainer;
   let myGlobe;
+
+  let data7days = $last7days?.result?.annotations;
+  let data3months = $last30days?.result?.annotations;
 
   onMount(() => {
     myGlobe = Globe()(globeContainer)
@@ -26,7 +27,13 @@
           .hexPolygonResolution(3)
           .hexPolygonMargin(0.3)
           .hexPolygonUseDots(false)
-          .hexPolygonColor(() => "#fff")
+          .hexPolygonColor((feature) => {
+            const countryName = feature.properties.NAME;
+            const outageLocations =
+              data7days?.map((day) => day.locationsDetails[0].name) || [];
+            const hasOutage = outageLocations.includes(countryName);
+            return hasOutage ? "red" : "#fff";
+          })
           .hexPolygonAltitude(0.02);
       });
 

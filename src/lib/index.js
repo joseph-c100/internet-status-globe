@@ -21,3 +21,8 @@ export const last7days = readable(
   [],
   loadJsonData("https://internetshutdowns.joeclark176.workers.dev/")
 );
+
+export const last30days = readable(
+  [],
+  loadJsonData("https://internetshutdowns3months.joeclark176.workers.dev/")
+);
