@@ -4,19 +4,21 @@
 
   import { last7days, last30days } from "$lib/index.js";
 
-  $: data7days = $last7days?.result?.annotations || [];
-  $: data3months = $last30days?.result?.annotations || [];
+  let data7days = $derived($last7days?.result?.annotations || []);
+  let data3months = $derived($last30days?.result?.annotations || []);
+
+  let active = $state("7days");
 </script>
 
 <div class="container">
   <div class="header">
-    <h1>Internet status globe</h1>
+    <h1>Global internet status</h1>
     <div class="status-menu">
-      <StatusMenu {data7days} {data3months} />
+      <StatusMenu {data7days} {data3months} {active} />
     </div>
   </div>
   <div class="globe">
-    <GlobeMap {data7days} {data3months} />
+    <GlobeMap {data7days} {data3months} {active} />
   </div>
 </div>
 
@@ -30,8 +32,8 @@
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 600;
-    padding: 1rem;
+    padding: 4px 10px;
   }
 </style>

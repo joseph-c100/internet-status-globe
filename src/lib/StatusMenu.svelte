@@ -1,8 +1,22 @@
 <script>
-  export let data7days, data3months;
+  let { data7days, data3months, active } = $props();
 </script>
 
 <div class="status-menu">
+  <div class="toggle">
+    <button
+      onclick={() => (active = "7days")}
+      class={active === "7days" ? "active" : ""}
+    >
+      <span>Last 7 days</span>
+    </button>
+    <button
+      onclick={() => (active = "3months")}
+      class={active === "3months" ? "active" : ""}
+    >
+      <span>Last 3 months</span>
+    </button>
+  </div>
   {#each data7days as day}
     <div class="status-menu-item">
       <button>
@@ -19,6 +33,26 @@
     background-color: white;
     font-family: "Inter", sans-serif;
     width: 100%;
+  }
+
+  .toggle {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    padding: 0 1rem;
+  }
+
+  .toggle button {
+    background-color: white;
+    border: 1px solid black;
+    padding: 6px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+
+  .toggle button.active {
+    background-color: black;
+    color: white;
   }
 
   .status-menu-item button {

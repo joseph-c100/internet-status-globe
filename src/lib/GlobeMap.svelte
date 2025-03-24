@@ -5,7 +5,7 @@
   let globeContainer;
   let myGlobe;
 
-  export let data7days, data3months;
+  let { data7days, data3months } = $props();
 
   onMount(() => {
     myGlobe = Globe()(globeContainer)
@@ -15,25 +15,6 @@
       .height(window.innerHeight)
       .pointOfView({ lat: 0, lng: 0, altitude: 1.2 })
       .showAtmosphere(false);
-
-    // getch boundary geojson data
-    fetch("/ne_110m_admin_0_countries.geojson")
-      .then((res) => res.json())
-      .then((countries) => {
-        myGlobe
-          .hexPolygonsData(countries.features)
-          .hexPolygonResolution(3)
-          .hexPolygonMargin(0.3)
-          .hexPolygonUseDots(false)
-          .hexPolygonColor((feature) => {
-            const countryName = feature.properties.NAME;
-            const outageLocations =
-              data7days?.map((day) => day.locationsDetails[0].name) || [];
-            const hasOutage = outageLocations?.includes(countryName);
-            return hasOutage ? "red" : "#fff";
-          })
-          .hexPolygonAltitude(0.02);
-      });
 
     // submarine internet cables geojson
     fetch("/submarine_cables.json")
@@ -53,9 +34,32 @@
           .pathPointLat((p) => p[1])
           .pathPointLng((p) => p[0])
           .pathDashLength(0.1)
-          .pathDashGap(0.01)
-          .pathDashAnimateTime(12000);
+          .pathDashGap(0.005)
+          .pathDashAnimateTime(32000);
       });
+
+    $effect(() => {
+      // getch boundary geojson data
+      if (data7days) {
+        fetch("/ne_110m_admin_0_countries.geojson")
+          .then((res) => res.json())
+          .then((countries) => {
+            myGlobe
+              .hexPolygonsData(countries.features)
+              .hexPolygonResolution(3)
+              .hexPolygonMargin(0.3)
+              .hexPolygonUseDots(false)
+              .hexPolygonColor((feature) => {
+                const countryName = feature.properties.NAME;
+                const outageLocations =
+                  data7days?.map((day) => day.locationsDetails[0].name) || [];
+                const hasOutage = outageLocations?.includes(countryName);
+                return hasOutage ? "red" : "#fff";
+              })
+              .hexPolygonAltitude(0.02);
+          });
+      }
+    });
 
     // Handle window resizing
     const handleResize = () => {
