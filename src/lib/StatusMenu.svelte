@@ -1,5 +1,5 @@
 <script>
-  let { data7days, data3months, active } = $props();
+  let { data, active = $bindable() } = $props();
 </script>
 
 <div class="status-menu">
@@ -17,10 +17,10 @@
       <span>Last 3 months</span>
     </button>
   </div>
-  {#each data7days as day}
+  {#each data as day}
     <div class="status-menu-item">
       <button>
-        <span>{day.locationsDetails[0].name}</span>
+        <span>{day?.locationsDetails[0]?.name}</span>
       </button>
     </div>
   {/each}
@@ -33,6 +33,8 @@
     background-color: white;
     font-family: "Inter", sans-serif;
     width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
   }
 
   .toggle {

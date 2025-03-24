@@ -5,7 +5,7 @@
   let globeContainer;
   let myGlobe;
 
-  let { data7days, data3months } = $props();
+  let { data } = $props();
 
   onMount(() => {
     myGlobe = Globe()(globeContainer)
@@ -40,7 +40,7 @@
 
     $effect(() => {
       // getch boundary geojson data
-      if (data7days) {
+      if (data) {
         fetch("/ne_110m_admin_0_countries.geojson")
           .then((res) => res.json())
           .then((countries) => {
@@ -52,7 +52,7 @@
               .hexPolygonColor((feature) => {
                 const countryName = feature.properties.NAME;
                 const outageLocations =
-                  data7days?.map((day) => day.locationsDetails[0].name) || [];
+                  data?.map((day) => day?.locationsDetails[0]?.name) || [];
                 const hasOutage = outageLocations?.includes(countryName);
                 return hasOutage ? "red" : "#fff";
               })

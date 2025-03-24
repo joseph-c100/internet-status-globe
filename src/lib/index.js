@@ -19,10 +19,26 @@ const loadJsonData = (url) => (set) => {
 // Internet outage data from Cloudflare Worker - last 7 days
 export const last7days = readable(
   [],
-  loadJsonData("https://internetshutdowns.joeclark176.workers.dev/")
+  loadJsonData("https://internetshutdowns.joeclark176.workers.dev/", (data) =>
+    data.filter(
+      (day) =>
+        day.locationsDetails?.length > 0 &&
+        typeof day.locationsDetails[0]?.name === "string" &&
+        day.locationsDetails[0].name.length > 0
+    )
+  )
 );
 
 export const last30days = readable(
   [],
-  loadJsonData("https://internetshutdowns3months.joeclark176.workers.dev/")
+  loadJsonData(
+    "https://internetshutdowns3months.joeclark176.workers.dev/",
+    (data) =>
+      data.filter(
+        (day) =>
+          day.locationsDetails[0]?.length >= 1 &&
+          typeof day.locationsDetails[0]?.name === "string" &&
+          day.locationsDetails[0].name.length > 0
+      )
+  )
 );

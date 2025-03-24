@@ -7,22 +7,36 @@
   let data7days = $derived($last7days?.result?.annotations || []);
   let data3months = $derived($last30days?.result?.annotations || []);
 
+  let SelectedData = $derived(active === "7days" ? data7days : data3months);
+
   let active = $state("7days");
+
+  $effect(() => {
+    console.log(SelectedData);
+  });
+
+  // TO DO
+  // - lookup table for country names
+  // - remove duplicate countries in status menu
+  // - click country name to center on globe
 </script>
 
 <div class="container">
   <div class="header">
     <h1>Global internet status</h1>
     <div class="status-menu">
-      <StatusMenu {data7days} {data3months} {active} />
+      <StatusMenu data={SelectedData} bind:active />
     </div>
   </div>
   <div class="globe">
-    <GlobeMap {data7days} {data3months} {active} />
+    <GlobeMap data={SelectedData} {active} />
   </div>
 </div>
 
 <style>
+  .container {
+    overflow: hidden;
+  }
   .header {
     position: absolute;
     z-index: 100;
