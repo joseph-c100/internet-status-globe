@@ -1,5 +1,15 @@
 <script>
   let { data, active = $bindable() } = $props();
+
+  let uniqueData = $derived(
+    data.filter(
+      (day, index, self) =>
+        index ===
+        self.findIndex(
+          (d) => d?.locationsDetails[0]?.name === day?.locationsDetails[0]?.name
+        )
+    )
+  );
 </script>
 
 <div class="status-menu">
@@ -17,7 +27,7 @@
       <span>Last 3 months</span>
     </button>
   </div>
-  {#each data as day}
+  {#each uniqueData as day}
     <div class="status-menu-item">
       <button>
         <span>{day?.locationsDetails[0]?.name}</span>
@@ -33,7 +43,7 @@
     background-color: white;
     font-family: "Inter", sans-serif;
     width: 100%;
-    max-height: 100vh;
+    max-height: 90dvh;
     overflow-y: auto;
   }
 

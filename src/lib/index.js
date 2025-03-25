@@ -22,7 +22,7 @@ export const last7days = readable(
   loadJsonData("https://internetshutdowns.joeclark176.workers.dev/", (data) =>
     data.filter(
       (day) =>
-        day.locationsDetails?.length > 0 &&
+        day.locations[0]?.length > 0 &&
         typeof day.locationsDetails[0]?.name === "string" &&
         day.locationsDetails[0].name.length > 0
     )
@@ -36,7 +36,7 @@ export const last30days = readable(
     (data) =>
       data.filter(
         (day) =>
-          day.locationsDetails[0]?.length >= 1 &&
+          day.locations[0]?.length >= 1 &&
           typeof day.locationsDetails[0]?.name === "string" &&
           day.locationsDetails[0].name.length > 0
       )
