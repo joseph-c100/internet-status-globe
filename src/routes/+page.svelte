@@ -16,7 +16,6 @@
   });
 
   // TO DO
-  // - lookup table for country names
   // - remove duplicate countries in status menu
   // - click country name to center on globe
 </script>

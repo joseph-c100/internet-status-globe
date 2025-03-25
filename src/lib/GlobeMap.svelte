@@ -50,9 +50,11 @@
               .hexPolygonMargin(0.3)
               .hexPolygonUseDots(false)
               .hexPolygonColor((feature) => {
-                const countryName = feature.properties.NAME;
+                const countryName = feature.properties.ISO_A2.toLowerCase();
                 const outageLocations =
-                  data?.map((day) => day?.locationsDetails[0]?.name) || [];
+                  data?.map((day) =>
+                    day?.locationsDetails[0]?.code.toLowerCase()
+                  ) || [];
                 const hasOutage = outageLocations?.includes(countryName);
                 return hasOutage ? "red" : "#fff";
               })
