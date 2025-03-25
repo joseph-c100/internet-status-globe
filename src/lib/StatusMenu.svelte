@@ -2,13 +2,20 @@
   let { data, active = $bindable() } = $props();
 
   let uniqueData = $derived(
-    data.filter(
-      (day, index, self) =>
-        index ===
-        self.findIndex(
-          (d) => d?.locationsDetails[0]?.name === day?.locationsDetails[0]?.name
-        )
-    )
+    data
+      .filter(
+        (day, index, self) =>
+          index ===
+          self.findIndex(
+            (d) =>
+              d?.locationsDetails[0]?.name === day?.locationsDetails[0]?.name
+          )
+      )
+      .map((day) => ({
+        ...day,
+        location:
+          day.locationsDetails[0]?.name || day.asnsDetails[0]?.location?.name,
+      }))
   );
 </script>
 
@@ -30,7 +37,7 @@
   {#each uniqueData as day}
     <div class="status-menu-item">
       <button>
-        <span>{day?.locationsDetails[0]?.name}</span>
+        <span>{day.location}</span>
       </button>
     </div>
   {/each}

@@ -7,6 +7,14 @@
 
   let { data } = $props();
 
+  const outageLocations = $derived(
+    data?.map(
+      (day) =>
+        day?.locationsDetails[0]?.code.toLowerCase() ||
+        day?.asnsDetails[0]?.location?.code.toLowerCase()
+    ) || []
+  );
+
   onMount(() => {
     myGlobe = Globe()(globeContainer)
       // .globeImageUrl("//unpkg.com/three-globe/example/img/earth-dark.jpg")
@@ -51,10 +59,6 @@
               .hexPolygonUseDots(false)
               .hexPolygonColor((feature) => {
                 const countryName = feature.properties.ISO_A2.toLowerCase();
-                const outageLocations =
-                  data?.map((day) =>
-                    day?.locationsDetails[0]?.code.toLowerCase()
-                  ) || [];
                 const hasOutage = outageLocations?.includes(countryName);
                 return hasOutage ? "red" : "#fff";
               })
