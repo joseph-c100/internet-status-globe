@@ -1,5 +1,5 @@
 <script>
-  let { data, active = $bindable() } = $props();
+  let { data, active = $bindable(), selectedCountry = $bindable() } = $props();
 
   let uniqueData = $derived(
     data
@@ -17,6 +17,10 @@
           day.locationsDetails[0]?.name || day.asnsDetails[0]?.location?.name,
       }))
   );
+
+  $effect(() => {
+    console.log(uniqueData);
+  });
 </script>
 
 <div class="status-menu">
@@ -36,8 +40,20 @@
   </div>
   {#each uniqueData as day}
     <div class="status-menu-item">
-      <button>
+      <button
+        onclick={() => (selectedCountry = day.location)}
+        class={selectedCountry === day.location ? "active" : ""}
+      >
         <span>{day.location}</span>
+        {#if selectedCountry === day.location}
+          <div class="locationInfo">
+            <span>{day.eventType}</span>
+            <span>{day.outage.outageCause}</span>
+            <span>{day.outage.outageType}</span>
+            <span>{day.description}</span>
+            <span>{day.startDate}</span>
+          </div>
+        {/if}
       </button>
     </div>
   {/each}
@@ -49,7 +65,7 @@
     flex-direction: column;
     background-color: white;
     font-family: "Inter", sans-serif;
-    width: 100%;
+    width: 300px;
     max-height: 90dvh;
     overflow-y: auto;
   }
@@ -87,5 +103,20 @@
   .status-menu-item button:hover {
     background-color: #f0f0f0;
     color: black;
+  }
+
+  .status-menu-item button.active {
+    background-color: white;
+    color: black;
+    font-weight: 600;
+    border-top: 2px solid black;
+  }
+
+  .locationInfo {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    font-size: 12px;
+    width: 100%;
   }
 </style>

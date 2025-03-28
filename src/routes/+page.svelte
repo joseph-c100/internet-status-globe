@@ -10,13 +10,9 @@
   let SelectedData = $derived(active === "7days" ? data7days : data3months);
 
   let active = $state("7days");
-
-  $effect(() => {
-    console.log(SelectedData);
-  });
+  let selectedCountry = $state(null);
 
   // TO DO
-  // - remove duplicate countries in status menu
   // - click country name to center on globe
 </script>
 
@@ -24,7 +20,7 @@
   <div class="header">
     <h1>Global internet status</h1>
     <div class="status-menu">
-      <StatusMenu data={SelectedData} bind:active />
+      <StatusMenu data={SelectedData} bind:active bind:selectedCountry />
     </div>
   </div>
   <div class="globe">
