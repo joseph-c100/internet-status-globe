@@ -18,7 +18,7 @@
 
 <div class="container">
   <div class="header">
-    <h1>Global internet status</h1>
+    <h1>Global internet outages</h1>
     <div class="status-menu">
       <StatusMenu data={SelectedData} bind:active bind:selectedCountry />
     </div>

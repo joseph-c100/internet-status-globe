@@ -74,7 +74,7 @@
     display: flex;
     flex-direction: row;
     gap: 5px;
-    padding: 0 1rem;
+    padding: 0 10px;
   }
 
   .toggle button {
