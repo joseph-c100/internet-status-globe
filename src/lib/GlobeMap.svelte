@@ -70,7 +70,7 @@
 
     // center on selected country using bbox
     $effect(() => {
-      if (selectedCountry) {
+      if (selectedCountry && countries) {
         const countryFeature = countries.features.find(
           (f) =>
             f.properties.ISO_A2.toLowerCase() === selectedCountry.toLowerCase()
@@ -100,7 +100,7 @@
             {
               lat,
               lng,
-              altitude: 2.5,
+              altitude: 1,
             },
             1000
           );
