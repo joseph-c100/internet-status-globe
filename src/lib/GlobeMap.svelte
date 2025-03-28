@@ -14,6 +14,9 @@
         day?.locationsDetails[0]?.code.toLowerCase() ||
         day?.asnsDetails[0]?.location?.code.toLowerCase(),
       outageType: day?.outage?.outageType.toLowerCase(),
+      outageDate: day?.startDate,
+      outageCause: day?.outage?.outageCause,
+      description: day?.description,
     })) || []
   );
 
@@ -78,7 +81,32 @@
                     ? "orange"
                     : "#fff";
               })
-              .hexPolygonAltitude(0.02);
+              .hexPolygonAltitude(0.02)
+              // tooltip label
+              .hexPolygonLabel((feature) => {
+                const countryCode = feature.properties.ISO_A2.toLowerCase();
+                const countryOutages = outageLocations.filter(
+                  (location) => location.locationCode === countryCode
+                );
+
+                if (countryOutages.length === 0) return null;
+                return `
+                  <div style="background: rgba(0,0,0,0.8); padding: 10px; max-width: 200px;">
+                    <div style="color: white; font-weight: bold; font-size: 1.2em;">${feature.properties.NAME}</div>
+                    ${countryOutages
+                      .map(
+                        (outage) => `
+                      <div style="color: white; font-size: 1.2em;">
+                        ${new Date(outage.outageDate).toLocaleString()}: 
+                        <span style="color: ${outage.outageType === "network" ? "orange" : outage.outageType === "nationwide" ? "red" : "black"}">${outage.outageType.toUpperCase()} outage</span>
+                        ${outage.outageCause ? `${outage.outageCause}` : ""}
+                      </div>
+                    `
+                      )
+                      .join("")}
+                  </div>
+                `;
+              });
           });
       }
     });

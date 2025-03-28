@@ -51,7 +51,7 @@
             <span>{day.outage.outageCause}</span>
             <span>{day.outage.outageType}</span>
             <span>{day.description}</span>
-            <span>{day.startDate}</span>
+            <span>{new Date(day.startDate).toLocaleString()}</span>
           </div>
         {/if}
       </button>
