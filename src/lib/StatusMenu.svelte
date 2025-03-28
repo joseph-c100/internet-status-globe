@@ -41,11 +41,11 @@
   {#each uniqueData as day}
     <div class="status-menu-item">
       <button
-        onclick={() => (selectedCountry = day.location)}
-        class={selectedCountry === day.location ? "active" : ""}
+        onclick={() => (selectedCountry = day.locations[0])}
+        class={selectedCountry === day.locations[0] ? "active" : ""}
       >
         <span>{day.location}</span>
-        {#if selectedCountry === day.location}
+        {#if selectedCountry === day.locations[0]}
           <div class="locationInfo">
             <span>{day.eventType}</span>
             <span>{day.outage.outageCause}</span>
@@ -118,5 +118,6 @@
     margin-top: 1rem;
     font-size: 12px;
     width: 100%;
+    gap: 4px;
   }
 </style>

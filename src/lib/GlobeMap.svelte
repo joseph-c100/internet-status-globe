@@ -4,8 +4,9 @@
 
   let globeContainer;
   let myGlobe;
+  let countries;
 
-  let { data } = $props();
+  let { data, selectedCountry } = $props();
 
   const outageLocations = $derived(
     data?.map(
@@ -45,13 +46,13 @@
           .pathDashGap(0.005)
           .pathDashAnimateTime(32000);
       });
-
     $effect(() => {
-      // getch boundary geojson data
+      // fetch boundary geojson data
       if (data) {
         fetch("/ne_110m_admin_0_countries.geojson")
           .then((res) => res.json())
-          .then((countries) => {
+          .then((countriesData) => {
+            countries = countriesData;
             myGlobe
               .hexPolygonsData(countries.features)
               .hexPolygonResolution(3)
@@ -64,6 +65,46 @@
               })
               .hexPolygonAltitude(0.02);
           });
+      }
+    });
+
+    // center on selected country using bbox
+    $effect(() => {
+      if (selectedCountry) {
+        const countryFeature = countries.features.find(
+          (f) =>
+            f.properties.ISO_A2.toLowerCase() === selectedCountry.toLowerCase()
+        );
+
+        if (countryFeature) {
+          let lat = 0;
+          let lng = 0;
+
+          // Try to get center from bbox if available
+          if (countryFeature.bbox && Array.isArray(countryFeature.bbox)) {
+            const [minLng, minLat, maxLng, maxLat] = countryFeature.bbox;
+            lat = (minLat + maxLat) / 2;
+            lng = (minLng + maxLng) / 2;
+          } else {
+            // Fallback: calculate center from geometry coordinates
+            const coordinates = countryFeature.geometry.coordinates[0][0];
+            if (coordinates) {
+              const lngs = coordinates.map((c) => c[0]);
+              const lats = coordinates.map((c) => c[1]);
+              lng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
+              lat = (Math.min(...lats) + Math.max(...lats)) / 2;
+            }
+          }
+
+          myGlobe.pointOfView(
+            {
+              lat,
+              lng,
+              altitude: 2.5,
+            },
+            1000
+          );
+        }
       }
     });
 

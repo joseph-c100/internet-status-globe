@@ -24,7 +24,7 @@
     </div>
   </div>
   <div class="globe">
-    <GlobeMap data={SelectedData} {active} />
+    <GlobeMap data={SelectedData} {selectedCountry} />
   </div>
 </div>
 
