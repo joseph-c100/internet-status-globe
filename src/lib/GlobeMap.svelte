@@ -9,11 +9,12 @@
   let { data, selectedCountry } = $props();
 
   const outageLocations = $derived(
-    data?.map(
-      (day) =>
+    data?.map((day) => ({
+      locationCode:
         day?.locationsDetails[0]?.code.toLowerCase() ||
-        day?.asnsDetails[0]?.location?.code.toLowerCase()
-    ) || []
+        day?.asnsDetails[0]?.location?.code.toLowerCase(),
+      outageType: day?.outage?.outageType.toLowerCase(),
+    })) || []
   );
 
   onMount(() => {
@@ -46,6 +47,7 @@
           .pathDashGap(0.005)
           .pathDashAnimateTime(32000);
       });
+
     $effect(() => {
       // fetch boundary geojson data
       if (data) {
@@ -59,9 +61,22 @@
               .hexPolygonMargin(0.3)
               .hexPolygonUseDots(false)
               .hexPolygonColor((feature) => {
-                const countryName = feature.properties.ISO_A2.toLowerCase();
-                const hasOutage = outageLocations?.includes(countryName);
-                return hasOutage ? "red" : "#fff";
+                const countryCode = feature.properties.ISO_A2.toLowerCase();
+                const hasNationalOutage = outageLocations.some(
+                  (location) =>
+                    location.locationCode === countryCode &&
+                    location.outageType === "nationwide"
+                );
+                const hasNetworkOutage = outageLocations.some(
+                  (location) =>
+                    location.locationCode === countryCode &&
+                    location.outageType === "network"
+                );
+                return hasNationalOutage
+                  ? "red"
+                  : hasNetworkOutage
+                    ? "orange"
+                    : "#fff";
               })
               .hexPolygonAltitude(0.02);
           });
