@@ -16,29 +16,14 @@ const loadJsonData = (url) => (set) => {
   return () => {};
 };
 
-// Internet outage data from Cloudflare Worker - last 7 days
+// Internet outage data from Cloudflare Radar API - last 7 days
 export const last7days = readable(
   [],
-  loadJsonData("https://internetshutdowns.joeclark176.workers.dev/", (data) =>
-    data.filter(
-      (day) =>
-        day.locations[0]?.length > 0 &&
-        typeof day.locationsDetails[0]?.name === "string" &&
-        day.locationsDetails[0].name.length > 0
-    )
-  )
+  loadJsonData('/api/outages-7days')
 );
 
+// Internet outage data from Cloudflare Radar API - last 12 weeks
 export const last30days = readable(
   [],
-  loadJsonData(
-    "https://internetshutdowns3months.joeclark176.workers.dev/",
-    (data) =>
-      data.filter(
-        (day) =>
-          day.locations[0]?.length >= 1 &&
-          typeof day.locationsDetails[0]?.name === "string" &&
-          day.locationsDetails[0].name.length > 0
-      )
-  )
+  loadJsonData('/api/outages-30days')
 );
